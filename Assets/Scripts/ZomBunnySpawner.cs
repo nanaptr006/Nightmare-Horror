@@ -41,29 +41,18 @@ public class ZombunnySpawner : MonoBehaviour
     {
         Vector3 spawnPosition = GetRandomSpawnPosition();
 
-        GameObject zombunny = Instantiate(
-            zombunnyPrefab,
-            spawnPosition,
-            Quaternion.identity
-        );
+        GameObject zombunny = Instantiate(zombunnyPrefab, spawnPosition, Quaternion.identity);
 
         // Count the new Zombunny
         currentZombunnies++;
 
         // Get EnemyHealth
-        EnemyHealth enemyHealth =
-            zombunny.GetComponent<EnemyHealth>();
+        EnemyHealth enemyHealth = zombunny.GetComponent<EnemyHealth>();
 
         if (enemyHealth != null)
         {
             // Listen for the death event
             enemyHealth.Died += OnZombunnyDied;
-        }
-        else
-        {
-            Debug.LogWarning(
-                "Zombunny does not have EnemyHealth!"
-            );
         }
     }
 
@@ -76,8 +65,7 @@ public class ZombunnySpawner : MonoBehaviour
         currentZombunnies--;
 
         // Prevent negative number
-        currentZombunnies =
-            Mathf.Max(currentZombunnies, 0);
+        currentZombunnies = Mathf.Max(currentZombunnies, 0);
 
         zombunniesKilled++;
 
