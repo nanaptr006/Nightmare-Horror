@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class EnemyHealth : MonoBehaviour
 {
 	public int startingHealth = 100;
@@ -75,10 +74,9 @@ public class EnemyHealth : MonoBehaviour
 		enemyAudio.clip = deathClip;
 		enemyAudio.Play();
 
-		if (Died != null)
-		{
-			Died(this);
-		}
+		KillCount.AddKill();
+		Died?.Invoke(this);
+
 	}
 
 
