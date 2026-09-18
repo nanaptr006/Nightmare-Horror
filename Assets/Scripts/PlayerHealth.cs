@@ -12,6 +12,7 @@ public class PlayerHealth : MonoBehaviour
     private AudioSource playerAudio;
     private playerMovement playerMovement;
     private PlayerShooting playerShooting;
+    [SerializeField] private HealthBar healthBar;
     private bool isDead;
 
     private void Awake()
@@ -22,6 +23,9 @@ public class PlayerHealth : MonoBehaviour
         playerShooting = GetComponentInChildren<PlayerShooting>();
 
         currentHealth = startingHealth;
+
+        if (healthBar != null)
+            healthBar.SetHealth(currentHealth, startingHealth);
     }
 
     public void TakeDamage(int amount)
@@ -30,6 +34,9 @@ public class PlayerHealth : MonoBehaviour
             return;
 
         currentHealth = Mathf.Max(currentHealth - amount, 0);
+
+        if (healthBar != null)
+            healthBar.SetHealth(currentHealth, startingHealth);
 
         Debug.Log("Health: " + currentHealth);
 
@@ -43,6 +50,7 @@ public class PlayerHealth : MonoBehaviour
     private void Death()
     {
         isDead = true;
+        KillCount.ResetCount();
         playerShooting.DisableEffects();
         anim.SetTrigger("Die");
         playerAudio.clip = deathClip;
@@ -53,6 +61,6 @@ public class PlayerHealth : MonoBehaviour
 
     public void RestartLevel()
     {
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 public class EnemyHealth : MonoBehaviour
 {
 	public int startingHealth = 100;
@@ -29,10 +30,16 @@ public class EnemyHealth : MonoBehaviour
 		currentHealth = startingHealth;
 	}
 
+	public void SetHealth(int health)
+	{
+		startingHealth = health;
+		currentHealth = health;
+	}
+
 
 	void Update()
 	{
-		if (isSinking)		//If isSinking is true, then make the ZomBunny sink to the bottom
+		if (isSinking)      //If isSinking is true, then make the ZomBunny sink to the bottom
 		{
 			transform.Translate(-Vector3.up * sinkSpeed * Time.deltaTime);
 		}
@@ -49,7 +56,7 @@ public class EnemyHealth : MonoBehaviour
 		currentHealth -= amount;
 
 		// Position the hitParticles to the hitPoint where the ZomBunny is hit
-		hitParticles.transform.position = hitPoint;	
+		hitParticles.transform.position = hitPoint;
 		// Play the particle effect
 		hitParticles.Play();
 
@@ -69,7 +76,7 @@ public class EnemyHealth : MonoBehaviour
 
 		capsuleCollider.isTrigger = true;
 
-		anim.SetTrigger("Dead");		//when the enemy is dead, set the trigger called "Dead" in the attached animator to true for a while.
+		anim.SetTrigger("Dead");        //when the enemy is dead, set the trigger called "Dead" in the attached animator to true for a while.
 
 		enemyAudio.clip = deathClip;
 		enemyAudio.Play();
@@ -82,9 +89,11 @@ public class EnemyHealth : MonoBehaviour
 
 	public void StartSinking()
 	{
-        // When the ZomBunny starts sinking, it should not be moved by Physics interaction. We then its Rigidbody to be Kinematic.
+		// When the ZomBunny starts sinking, it should not be moved by Physics interaction. We then its Rigidbody to be Kinematic.
 		GetComponent<Rigidbody>().isKinematic = true;
-        isSinking = true;
+		isSinking = true;
+		GetComponent<EnemyMovement>().enabled = false;
+		GetComponent<NavMeshAgent>().enabled = false;
 		// The dead ZomBunny will destroy itself within 2 seconds.
 		Destroy(gameObject, 1.5f);
 	}

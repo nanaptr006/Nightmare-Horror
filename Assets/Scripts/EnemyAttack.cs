@@ -7,7 +7,13 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] private float attackCooldown = 1f;
 
     private Transform player;
+    private PlayerHealth playerHealth;
     private float nextAttackTime;
+
+    public void SetDamage(int amount)
+    {
+        damage = amount;
+    }
 
     private void Start()
     {
@@ -16,12 +22,16 @@ public class EnemyAttack : MonoBehaviour
         if (playerObject != null)
         {
             player = playerObject.transform;
+            playerHealth = playerObject.GetComponentInParent<PlayerHealth>();
+
+            if (playerHealth == null)
+                playerHealth = playerObject.GetComponentInChildren<PlayerHealth>();
         }
     }
 
     private void Update()
     {
-        if (player == null)
+        if (player == null || playerHealth == null)
             return;
 
         float distance = Vector3.Distance(
@@ -38,10 +48,6 @@ public class EnemyAttack : MonoBehaviour
 
     private void Attack()
     {
-        player.SendMessage(
-            "TakeDamage",
-            damage,
-            SendMessageOptions.DontRequireReceiver
-        );
+        playerHealth.TakeDamage(damage);
     }
 }
